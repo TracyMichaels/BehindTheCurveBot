@@ -109,6 +109,7 @@ client.on("message", msg => {
                     msg.channel.send("invalid command");
             }
             break;
+        //end fun
 
         //Band utilities***********************************************************************************************
         //roll a dice, can have parameter for number of sides, default is 6
@@ -193,6 +194,7 @@ client.on("message", msg => {
         // end utilities
 
         //pastas********************************************************************************
+        //TODO rework to !pasta <name>
         //message the navy seal copy posta
         case `${prefix}sealpasta`:
             console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
@@ -220,7 +222,7 @@ client.on("message", msg => {
         //end pastas
 
         //meta********************************************************************
-
+        //TODO add meta info
         //end meta
 
         //close bot if being too annoying
