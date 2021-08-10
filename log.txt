@@ -1,9 +1,0 @@
-2021/08/10 17:52:27:: Logged in as BehindTheCurveBot#9446!
-2021/08/10 17:54:08:: Logged in as BehindTheCurveBot#9446!
-2021/08/10 17:54:28:: TracyMichaels#2634 sent a message to bot-sandbox
-2021/08/10 17:54:28:: TracyMichaels#2634: Executed !ping command
-2021/08/10 17:55:52:: TracyMichaels#2634 sent a message to bot-sandbox
-2021/08/10 17:55:52:: TracyMichaels#2634: Executed !music command
-2021/08/10 18:15:32:: drinkpamp#7416 sent a message to general-band-chat
-2021/08/10 18:15:57:: drinkpamp#7416 sent a message to general-band-chat
-2021/08/10 18:16:01:: drinkpamp#7416 sent a message to general-band-chat
