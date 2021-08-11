@@ -155,7 +155,10 @@ client.on("message", msg => {
             console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
             if (msgContents.length > 1) {
                 rhyme(function (r) {
-                    msg.channel.send(r.rhyme(msgContents[1]).join(' ').toLowerCase());
+                    var rhymes = r.rhyme(msgContents[1]).join(' ').toLowerCase();
+                    if (rhymes === "") {
+                        msg.channel.send("(undefined)");
+                    }
                 });
             } else {
                 msg.channel.send("invalid parameter");
