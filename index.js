@@ -158,7 +158,9 @@ client.on("message", msg => {
                     var rhymes = r.rhyme(msgContents[1]).join(' ').toLowerCase();
                     if (rhymes === "") {
                         msg.channel.send("(undefined)");
+                        return;
                     }
+                    msg.channel.send(rhymes);
                 });
             } else {
                 msg.channel.send("invalid parameter");
