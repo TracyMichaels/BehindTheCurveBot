@@ -42,199 +42,252 @@ client.on("message", msg => {
     //ignore messages from bot
     if (msg.author.bot) return;
     //activity log
-    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag} sent a message to ${msg.channel.name}`);
+    try {
+        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag} sent a message to ${msg.channel.name}`);
+    } catch (e) {
+        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: log failed`);
+    }
 
-    //reacts skull emoji on "I forgor"
+    // reacts skull emoji on "I forgor"
     if (msg.content.toLowerCase().match(new RegExp("i forgor")) != null) msg.react('💀');
+    // reaccts angry if someone says they/jake is allergic
+    if (msg.content.toLowerCase().match(/(i[' a]*m|jake['s]*( is)?) allergic/) != null) msg.react(msg.guild.emojis.cache.find(emoji => emoji.name === "angery"));
+    // reacts nicecock emoji to penis/benis
+    if (msg.content.toLowerCase().match(/(p|b)enis/)) msg.react(msg.guild.emojis.cache.find(emoji => emoji.name === "NiceCock"));
+    // xkcd hyphen
+    if (msg.content.toLowerCase().match(/\w+\d*-ass \w+\d*/)) msg.reply(`What's an ass-${msg.content.toLowerCase().match(/\w+-ass \w+/)[0].split(' ')[1]}?`);
+    // reacts obama prism animated emoji on "obama"
+    if (msg.content.toLowerCase().match(/obama/)) msg.react(msg.guild.emojis.cache.find(emoji => emoji.name === "ObamaPrismgif"));
+    // react to praise
+    if (msg.content.toLowerCase().match(/good (fren)?bo[ty]/)) msg.channel.send(goodList[Math.floor(Math.random() * goodList.length)]);
+    // react to neg
+    if (msg.content.toLowerCase().match(/bad (fren)?bo[ty]/)) msg.channel.send(badList[Math.floor(Math.random() * badList.length)]);
+    // react to send nudes
+    if (msg.content.toLowerCase().match(/send( some|me( some)?)? n(u*|o*)dl?e?s*/)) msg.channel.send("u first :3");
+
+
 
     //return if not in approved non-serious channels, only during initial building and testing
     //if (msg.channel.name != "grill-n-chill" && msg.channel.name != 'bot-sandbox' && msg.channel.name != "bot-feature-requests") return;
 
-    // messageCounter++;
+    messageCounter++;
     reactionCounter++;
     // console.log("Message Counter: " + messageCounter);
     //console.log("Reaction Counter: " + reactionCounter);
     // console.log("Sarcastic Threshold: " + sarcasticThreshold);
     //console.log("Reaction Threshold: " + reactionThreshold);
 
-    // //reply with a sarcastic comment
-    // if (messageCounter === sarcasticThreshold) {
-    //     msg.reply(sarcasticComment(msg.content));
-    //     messageCounter = 0;
-    //     sarcasticThreshold = getRandomIntInclusive(sarcasticMIN, sarcasticMAX);
-    // }
+    //reply with a sarcastic comment
+    if (messageCounter === sarcasticThreshold) {
+        try {
+            msg.reply(`${sarcasticComment(msg.content)} ${msg.guild.emojis.cache.find(emoji => emoji.name === "spongebobmock")}`);
+        } catch (e) {
+            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: sarcastic failed`);
+        }
+        messageCounter = 0;
+        sarcasticThreshold = getRandomIntInclusive(sarcasticMIN, sarcasticMAX);
+    }
 
     //react randomly to a message with custom emoji
-    try {
-        if (reactionCounter === reactionThreshold) {
+    if (reactionCounter === reactionThreshold) {
+        try {
             msg.react(msg.guild.emojis.cache.find(emoji => emoji.name === emojiList[Math.floor(Math.random() * emojiList.length)]));
-            reactionCounter = 0;
-            reactionThreshold = getRandomIntInclusive(reactionMIN, reactionMAX);
+        } catch (e) {
+            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: reaction failed`);
         }
-    } catch (e) {
-        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: reaction failed`);
         reactionCounter = 0;
         reactionThreshold = getRandomIntInclusive(reactionMIN, reactionMAX);
     }
 
     if (!msg.content.startsWith(prefix)) return;
-    var num;
-    var msgContents = msg.content.toLowerCase().trim().split(' ');
-    switch (msgContents[0]) {
-        //test***************************************************************************************************
-        case `${prefix}ping`:
-            msg.reply("stfu");
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            break;
-
-        //fun*****************************************************************************************************
-        //music player
-        case `${prefix}music`:
-            const serverQueue = musicQueue.get(msg.guild.id);
-            switch (msgContents[1]) {
-                case `play`:
-                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-                    execute(msg, serverQueue);
-                    msg.delete();
-                    break;
-                case `skip`:
-                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-                    skip(msg, serverQueue);
-                    break;
-                case `stop`:
-                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-                    stop(msg, serverQueue);
-                    break;
-                default:
-                    msg.channel.send("invalid command");
-            }
-            break;
-        //end fun
-
-        //Band utilities***********************************************************************************************
-        //roll a dice, can have parameter for number of sides, default is 6
-        case `${prefix}dice`:
-            if (msgContents.length > 1) {
-                num = rollDice(parseInt(msgContents[1]));
-            } else {
-                num = rollDice(6);
-            }
-            if (!isNaN(num)) {
-                msg.reply(`You rolled a ${num}`);
+    try {
+        var num;
+        var msgContents = msg.content.toLowerCase().trim().split(' ');
+        switch (msgContents[0]) {
+            //test***************************************************************************************************
+            case `${prefix}ping`:
+                msg.reply("stfu");
                 console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            } else {
-                msg.reply('Invalid command: use \"!dice \\d?\" default is 6');
-            }
-            break;
-
-        //arbiter method
-        case `${prefix}arbiter`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            var numCards = 1
-            if (msgContents.length > 1) {
-                numCards = Math.abs(parseInt(msgContents[1]));
-            }
-            var temp = "";
-            if (!isNaN(numCards)) {
-                for (let i = 0; i < numCards; i++) {
-                    temp += cardList[Math.floor(Math.random() * cardList.length)];
-                }
-            } else if (msgContents[1] === 'key') {
-                msg.channel.send(`${fs.readFileSync('./arbiter_key.txt')}`);
                 break;
-            } else {
-                msg.channel.send("invalid parameter");
-                break;
-            }
-            msg.channel.send(temp);
-            break;
 
-        //lyric tools
-        //rhymes
-        case `${prefix}rhyme`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            if (msgContents.length > 1) {
-                rhyme(function (r) {
-                    var rhymes = r.rhyme(msgContents[1]).join(' ').toLowerCase();
-                    if (rhymes === "") {
-                        msg.channel.send("(undefined)");
-                        return;
+            //fun*****************************************************************************************************
+            //music player
+            case `${prefix}music`:
+                try {
+                    const serverQueue = musicQueue.get(msg.guild.id);
+                    switch (msgContents[1]) {
+                        case `play`:
+                            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                            execute(msg, serverQueue);
+                            msg.delete();
+                            break;
+                        case `skip`:
+                            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                            skip(msg, serverQueue);
+                            break;
+                        case `stop`:
+                            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                            stop(msg, serverQueue);
+                            break;
+                        default:
+                            msg.channel.send("invalid command");
                     }
-                    msg.channel.send(rhymes);
-                });
-            } else {
-                msg.channel.send("invalid parameter");
-            }
-            break;
-        //synonyms
-        case `${prefix}synonym`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            if (msgContents.length > 1) {
-                try {
-                    var nouns = synonyms(msgContents[1], "n").join(' ');
                 } catch (e) {
-                    nouns = "(undefined)";
+                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: music command failed`);
+
                 }
-                try {
-                    var verbs = synonyms(msgContents[1], "v").join(' ');
-                } catch (e) {
-                    verbs = "(undefined)";
+                break;
+            //end fun
+
+            //Band utilities***********************************************************************************************
+            //roll a dice, can have parameter for number of sides, default is 6
+            case `${prefix}dice`:
+                if (msgContents.length > 1) {
+                    num = rollDice(parseInt(msgContents[1]));
+                } else {
+                    num = rollDice(6);
                 }
-                msg.channel.send(`nouns: ${nouns}\nverbs: ${verbs}`);
-            } else {
-                msg.channel.send("needs a parameter");
-            }
-            break;
-        //antonyms ***DOES NOT WORK***
-        case `${prefix}antonym`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            if (msgContents.length > 1) {
-                try {
-                    console.log(tcom.search(msgContents[1]).antonyms.join(' '));
-                } catch (e) {
-                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: antonym failed`);
+                if (!isNaN(num)) {
+                    msg.reply(`You rolled a ${num}`);
+                    console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                } else {
+                    msg.reply('Invalid command: use \"!dice \\d?\" default is 6');
                 }
-            }
-            break;
-        // end utilities
+                break;
 
-        //pastas********************************************************************************
-        //TODO rework to !pasta <name>
-        //message the navy seal copy posta
-        case `${prefix}sealpasta`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            msg.channel.send(`${fs.readFileSync('./navyseal.txt')}`);
-            break;
+            //arbiter method
+            case `${prefix}arbiter`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                var numCards = 1
+                if (msgContents.length > 1) {
+                    numCards = Math.abs(parseInt(msgContents[1]));
+                }
+                var temp = "";
+                if (!isNaN(numCards)) {
+                    for (let i = 0; i < numCards; i++) {
+                        temp += cardList[Math.floor(Math.random() * cardList.length)];
+                    }
+                } else if (msgContents[1] === 'key') {
+                    msg.channel.send(`${fs.readFileSync('./arbiter_key.txt')}`);
+                    break;
+                } else {
+                    msg.channel.send("invalid parameter");
+                    break;
+                }
+                msg.channel.send(temp);
+                break;
 
-        case `${prefix}rmpasta`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            msg.channel.send(`${fs.readFileSync('./rmpasta.txt')}`);
-            break;
+            //lyric tools
+            //rhymes
+            case `${prefix}rhyme`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                if (msgContents.length > 1) {
+                    rhyme(function (r) {
+                        var rhymes = r.rhyme(msgContents[1]).join(' ').toLowerCase();
+                        if (rhymes === "") {
+                            msg.channel.send("(undefined)");
+                            return;
+                        }
+                        msg.channel.send(rhymes);
+                    });
+                } else {
+                    msg.channel.send("invalid parameter");
+                }
+                break;
+            //synonyms
+            case `${prefix}synonym`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                if (msgContents.length > 1) {
+                    try {
+                        var nouns = synonyms(msgContents[1], "n").join(' ');
+                    } catch (e) {
+                        nouns = "(undefined)";
+                    }
+                    try {
+                        var verbs = synonyms(msgContents[1], "v").join(' ');
+                    } catch (e) {
+                        verbs = "(undefined)";
+                    }
+                    msg.channel.send(`nouns: ${nouns}\nverbs: ${verbs}`);
+                } else {
+                    msg.channel.send("needs a parameter");
+                }
+                break;
+            //antonyms ***DOES NOT WORK***
+            case `${prefix}antonym`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                if (msgContents.length > 1) {
+                    try {
+                        console.log(tcom.search(msgContents[1]).antonyms.join(' '));
+                    } catch (e) {
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: antonym failed`);
+                    }
+                }
+                break;
+            // end utilities
 
-        case `${prefix}fgpasta`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            msg.channel.send(`${fs.readFileSync('./fgpasta.txt')}`);
-            break;
+            //pastas********************************************************************************
+            case `${prefix}pasta`:
+                if (msgContents.length < 2) {
+                    msg.channel.send("missing argument");
+                    break;
+                }
+                switch (msgContents[1]) {
+                    case `navyseal`:
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                        msg.channel.send(`${fs.readFileSync('./navyseal.txt')}`);
+                        break;
+                    case `rickandmorty`:
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                        msg.channel.send(`${fs.readFileSync('./rmpasta.txt')}`);
+                        break;
+                    case `familyguy`:
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                        msg.channel.send(`${fs.readFileSync('./fgpasta.txt')}`);
+                        break;
+                    case `daddy`:
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                        msg.channel.send(`${fs.readFileSync('./daddypasta.txt')}`);
+                        break;
+                    case `gnu`:
+                    case `linux`:
+                        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                        msg.channel.send(`${fs.readFileSync('./GNULinuxpasta.txt')}`);
+                        break;
+                }
+                break;
 
-        case `${prefix}daddypasta`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            msg.channel.send(`${fs.readFileSync('./daddypasta.txt')}`);
-            break;
-        //speak the navy seal copy pasta
-        case `${prefix}saysealpasta`:
-            msg.channel.send(`${fs.readFileSync('./navyseal.txt')}`, { tts: true });
-            break;
-        //end pastas
+            //speak the navy seal copy pasta
+            case `${prefix}saysealpasta`:
+                msg.channel.send(`${fs.readFileSync('./navyseal.txt')}`, { tts: true });
+                break;
+            //end pastas
 
-        //meta********************************************************************
-        //TODO add meta info
-        //end meta
+            //meta********************************************************************
+            //TODO add meta info
+            case `${prefix}commands`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                msg.channel.send(`${fs.readFileSync('./commands.txt')}`);
+                break;
+            // send link to source code
+            case `${prefix}source`:
+                msg.channel.send(`take a look inside me daddy uWu\nhttps://github.com/TracyMichaels/FrenZoneBot\n`, { files: ['./sourcecode.jpg'] }).then(m => { m.suppressEmbeds(true) });
+                break;
 
-        //close bot if being too annoying
-        case `${prefix}fuckoff`:
-            console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
-            msg.channel.send("k bye");
-            process.exit();
+            // display info about author
+            case `${prefix}author`:
+                msg.channel.send(`my daddy is @TracyMichaels <3`);
+                break;
+            //end meta
+
+            //close bot if being too annoying
+            case `${prefix}fuckoff`:
+                console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: ${msg.member.user.tag}: Executed ${msgContents[0]} command`);
+                msg.channel.send("k bye");
+                process.exit();
+        }
+    } catch {
+        console.log(`${date.format(new Date(), 'YYYY/MM/DD HH:mm:ss')}:: failed to execute ${msgContents[0]}`);
     }
 });
 
