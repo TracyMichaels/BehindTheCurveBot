@@ -50,6 +50,7 @@ client.on("message", msg => {
 
     // reacts skull emoji on "I forgor"
     if (msg.content.toLowerCase().match(new RegExp("i forgor")) != null) msg.react('💀');
+    if (msg.content.toLowerCase().match(/i forgot/)) msg.channel.send("I forgor*");
     // reaccts angry if someone says they/jake is allergic
     if (msg.content.toLowerCase().match(/(i[' a]*m|jake['s]*( is)?) allergic/) != null) msg.react(msg.guild.emojis.cache.find(emoji => emoji.name === "angery"));
     // reacts nicecock emoji to penis/benis
