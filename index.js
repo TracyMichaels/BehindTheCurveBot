@@ -65,6 +65,10 @@ client.on("message", msg => {
     if (msg.content.toLowerCase().match(/bad (fren)?bo[ty]/)) msg.channel.send(badList[Math.floor(Math.random() * badList.length)]);
     // react to send nudes
     if (msg.content.toLowerCase().match(/send( some|me( some)?)? n(u*|o*)dl?e?s*/)) msg.channel.send("u first :3");
+    // react to Linux
+    if (msg.content.toLowerCase().match(/linux/)) msg.channel.send("I use Arch btw");
+    // 836
+    if (msg.content.toLowerCase().match(/what time/)) msg.channel.send("8:36");
 
 
 
@@ -272,7 +276,7 @@ client.on("message", msg => {
                 break;
             // send link to source code
             case `${prefix}source`:
-                msg.channel.send(`take a look inside me daddy uWu\nhttps://github.com/TracyMichaels/FrenZoneBot\n`, { files: ['./sourcecode.jpg'] }).then(m => { m.suppressEmbeds(true) });
+                msg.channel.send(`take a look inside me daddy uWu\nhttps://github.com/TracyMichaels/BehindTheCurveBot\n`, { files: ['./sourcecode.jpg'] }).then(m => { m.suppressEmbeds(true) });
                 break;
 
             // display info about author
